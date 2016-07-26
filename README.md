@@ -15,7 +15,7 @@ define('B', 'A_COOKIE_REAL_VALUE');
 ```
 
 - Change site to reflect your team name (e.g. for `moovel.slack.com` enter `moovel`)
-- Change A and B cookies as found in your browser (A is the value of your a cookie, B is the value of your a-{a-value} cookie
+- Change A and B cookies as found in your browser (A is the value of your a cookie, B is the value of your a-{a-value} cookie)
 
 ## Run
 
