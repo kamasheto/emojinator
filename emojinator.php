@@ -10,13 +10,19 @@ define(COOKIES, sprintf('a=%s;a-%s=%s', A, A, B));
 $team_url = 'https://'.SITE.'.slack.com/stats';
 $response = get($team_url);
 $body = preg_replace('/\s+/', ' ', $response['content']);
-preg_match_all('/<tr.*?>.*?(https?:\/\/(?:(?!a\.slack).)[^\'"]*).*?(@[\w.]+).*?<\/tr>/', $body, $matches);
+// By only taking avatars.slack imgs, we're ignoring gravatars (and default slack icons)
+preg_match_all('/<tr.*?>.*?(https?:\/\/avatars.slack[^\'"]*).*?(@[\w.]+).*?<\/tr>/', $body, $matches);
+
+if (! count($matches[0])) {
+	echo "Found nobody. Your cookies are probably wrongish.\n";
+	die;
+}
 
 $users = $argv;
 array_shift($users);
 
 foreach ($matches[2] as $k => $username) {
-	if (!process_user(substr($username, 1)))
+	if (!process_user($username))
 		continue;
 
 	echo 'Downloading '.$username.'\'s avatar... ';
@@ -38,7 +44,7 @@ foreach (scandir('emojis') as $file) {
 
 	$info = pathinfo($file);
 
-	if (!process_user(substr($info['filename'], 1))) {
+	if (!process_user($info['filename'])) {
 		continue;
 	}
 
@@ -58,7 +64,7 @@ foreach (scandir('emojis') as $file) {
 function process_user($user) {
 	global $users;
 
-	return count($users) > 0 ? in_array($user, $users) : true;
+	return count($users) > 0 ? in_array(substr($user, 1), $users) : true;
 }
 
 // Source: http://stackoverflow.com/a/21943596
