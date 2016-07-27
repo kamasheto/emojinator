@@ -54,7 +54,7 @@ foreach (scandir('emojis') as $file) {
 	post($emojis_url, array(
 		'add' => 1,
 		'crumb' => $matches[3],
-		'name' => $info['filename'],
+		'name' => no_dot($info['filename']),
 		'mode' => 'data',
 		'img' => "@$file"
 	));
@@ -65,6 +65,10 @@ function process_user($user) {
 	global $users;
 
 	return count($users) > 0 ? in_array(substr($user, 1), $users) : true;
+}
+
+function no_dot($val) {
+	return str_replace('.', '', $val);
 }
 
 // Source: http://stackoverflow.com/a/21943596
